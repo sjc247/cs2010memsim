@@ -1,0 +1,84 @@
+/* Author:	Matt W. Martin, 4374851
+ *		kaethis@tasmantis.net
+ *
+ * Project:	CS2010, Lab #4
+ *		        Computer Memory Simulation
+ *
+ * File:	cmemory */
+
+#ifndef __CMEMORY__
+#define __CMEMORY__
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+using std::vector;
+
+typedef int WORD;	/* Refers to UNSIGNED unit of data; computer architechture
+			 * data type.  Represented to five digits. */
+
+class Memory{
+/* Represents a computer memory structure capable of storing WORD values.  Size of
+ * Memory is fixed and assigned at declaration of Memory.
+ * NOTE: Default size is 512 WORDs. */
+
+	public:
+	Memory(int size = 512){
+		this -> address = new vector<WORD>(size, 0);
+		this -> avail = size;
+	}							// CONSTRUCTOR
+
+	~Memory(){ delete (this -> address);}			// DESTRUCTOR
+
+	WORD get(int offset);			/* If within range, gets WORD value
+						 * at specific offset in Memory. */
+
+	bool set(int offset, WORD value);	/* If within range, sets the value
+						 * at specific offset in Memory. */
+
+	bool insert(WORD value);		/* If not full, inserts the value at
+						 * the next available (empty) address
+						 * in Memory. */
+
+	bool copy(int dest, int source);	/* If not empty and within range,
+						 * copies value from source address
+						 * into destination address. */
+
+	bool copy(int dest, int destMax, int souce);	/* Similarly to copy above,
+							 * copies WORD block starting
+							 * from source to (and
+							 * INCLUDING) destMax. */
+
+	bool clear(); 				/* If not empty, clears all addresses
+						 * in Memory. */
+
+	bool clear(int offset); 		/* If within range, clears address at
+						 * specific offset in Memory. */
+
+	bool dump();				// Displays all stored WORD values.
+
+	bool dump(int offset, int offsetMax);	/* If witin range, displays stored
+						 * WORD values starting from offset
+						 * to (and INCLUDING) offsetMax. */
+
+	private:
+	vector<WORD> *address;			// Pointer to base address in Memory.
+
+	int avail;				/* Represents the total number of
+						 * available addresses in Memory. */
+
+	int size(){return (this -> address -> size());}	/* Returns total number of
+							 * Memory addresses. */
+
+	int last(){return (this -> size() - 1);}	/* Returns offset of last
+							 * address in Memory. */
+
+	bool isEmpty(){return (this -> avail == this -> size());}
+
+	bool isFull(){return (this -> avail == 0);}
+};
+
+#endif
